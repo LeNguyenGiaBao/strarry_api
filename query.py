@@ -11,8 +11,8 @@ cursor = db.cursor()
 
 def sign_up_user(user):
     try:
-        query = 'insert into account (email_account, password_account, role_account) values (%s, %s, %s)'
-        value = (user.email, user.password, user.role_account)
+        query = 'insert into account (email_account, password_account) values (%s, %s)'
+        value = (user.email, user.password)
 
         cursor.execute(query, value)
         db.commit()

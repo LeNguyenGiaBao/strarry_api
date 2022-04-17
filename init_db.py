@@ -15,6 +15,6 @@ cursor.execute('''CREATE TABLE account (
                 name_account NVARCHAR(50) NULL, 
                 phone_account CHAR(50) NULL, 
                 address_account NVARCHAR(50) NULL, 
-                role_account INT NOT NULL, 
+                role_account INT NOT NULL DEFAULT 1, 
                 image_account MEDIUMBLOB NULL, 
                 PRIMARY KEY (id));''')

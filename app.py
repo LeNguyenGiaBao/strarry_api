@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.encoders import jsonable_encoder
 import uvicorn
 from model import User
-from query import sign_in_user
+from query import sign_in_user, sign_up_user
 
 # Fast API
 app = FastAPI()
@@ -11,22 +11,40 @@ app = FastAPI()
 def index():
     return {"name" : "giabao"}
 
-@app.post("/login/")
-async def login(user: User):
+@app.post("/signin/")
+async def signin(user: User):
     id_user = sign_in_user(user)
     if id_user is not None:
         return jsonable_encoder({
             'code': '200',
-            'is_login': 'true',
+            'success': 'true',
             'id': id_user,
-            'msg': 'login success'
+            'msg': 'sign in success'
         })
 
     else:
         return jsonable_encoder({
             'code': '200',
-            'is_login': 'false',
-            'msg': 'login failed'
+            'success': 'false',
+            'msg': 'sign in failed'
+        })
+
+@app.post("/signup/")
+async def signup(user: User):
+    id_user = sign_up_user(user)
+    if id_user is not None:
+        return jsonable_encoder({
+            'code': '200',
+            'success': 'true',
+            'id': id_user,
+            'msg': 'sign up success'
+        })
+
+    else:
+        return jsonable_encoder({
+            'code': '200',
+            'success': 'false',
+            'msg': 'sign in failed'
         })
     
 
