@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.encoders import jsonable_encoder
 import uvicorn
 from model import User
-from query import sign_in_user, sign_up_user
+from query import sign_in_user, sign_up_user, get_list_product
 
 # Fast API
 app = FastAPI()
@@ -46,6 +46,17 @@ async def signup(user: User):
             'success': 'false',
             'msg': 'sign in failed'
         })
+
+@app.get('/products/')
+async def get_product():
+    products = get_list_product()
+    return jsonable_encoder({
+        'code': '200',
+        'products': products,
+        'msg': 'load product success'
+    })
+
+
     
 
 if __name__ == "__main__":

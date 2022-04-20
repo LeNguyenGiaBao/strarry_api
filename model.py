@@ -9,3 +9,12 @@ class User(BaseModel):
     address: Optional[str] = None
     role: int = 1
     image: Optional[str] = None
+
+class Product(BaseModel):
+    id: int 
+    name: str 
+    description: Optional[str] = None 
+    price: Optional[int] = 0
+    quantity: Optional[int] = 0 
+    image: Optional[str] = None
+    id_category: int 

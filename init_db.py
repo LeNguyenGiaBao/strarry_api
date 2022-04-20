@@ -18,3 +18,8 @@ cursor.execute('''CREATE TABLE account (
                 role_account INT NOT NULL DEFAULT 1, 
                 image_account MEDIUMBLOB NULL, 
                 PRIMARY KEY (id));''')
+
+cursor.execute('''
+  create table product (id int primary key auto_increment, name_product nvarchar(50) not null, description_product nvarchar(256), price_product int, quantity_product int, image_product mediumblob, id_category_product int);
+''')
+# insert into product (name_product, price_product) values ('Product 1', 100000);

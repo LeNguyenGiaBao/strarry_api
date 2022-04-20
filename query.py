@@ -1,29 +1,38 @@
 import mysql.connector as connector
 
-db = connector.connect(
-  host="localhost",
-  user="root",
-  password="123456",
-  database="strarry"
-)
-
-cursor = db.cursor()
+def connect():
+    connection = connector.connect(
+        host="localhost",
+        user="root",
+        password="123456",
+        database="strarry"
+    )
+    return connection
 
 def sign_up_user(user):
     try:
+        connection =connect()
+        cursor = connection.cursor()
         query = 'insert into account (email_account, password_account) values (%s, %s)'
         value = (user.email, user.password)
 
         cursor.execute(query, value)
-        db.commit()
+        connection.commit()
         return cursor.lastrowid
     
     except connector.Error as error:
         print(error)
         return None 
 
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
 def sign_in_user(user):
     try:
+        connection =connect()
+        cursor = connection.cursor()
         query = 'select * from account where email_account = %s and password_account = %s'
         value = (user.email, user.password)
         cursor.execute(query, value)
@@ -37,6 +46,30 @@ def sign_in_user(user):
     except connector.Error as error:
         print(error)
         return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
+def get_list_product():
+    try: 
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'select * from product'
+        cursor.execute(query) 
+        result = cursor.fetchall()
+        # print(result)
+        return result 
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
 
 
 # if __name__ == "__main__":
