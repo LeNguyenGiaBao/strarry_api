@@ -9,7 +9,7 @@ def connect():
     )
     return connection
 
-def sign_up_user(user):
+def sign_up_user_to_db(user):
     try:
         connection =connect()
         cursor = connection.cursor()
@@ -71,7 +71,24 @@ def get_list_product():
             cursor.close()
             connection.close()
 
+def insert_product_to_db(product):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'insert into product (name_product, description_product, price_product, quantity_product, image_product, id_category_product) values (%s, %s, %s, %s, %s, %s);'
+        value = (product.name, product.description, product.price, product.quantity, product.image, product.id_category)
+        cursor.execute(query, value)
+        connection.commit()
+        return cursor.lastrowid
 
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
 # if __name__ == "__main__":
 #     # sign up
 #     # is_sign_up_success = sign_up_user('mail1@gmail.com', "password")

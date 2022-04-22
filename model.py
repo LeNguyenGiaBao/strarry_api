@@ -11,7 +11,7 @@ class User(BaseModel):
     image: Optional[str] = None
 
 class Product(BaseModel):
-    id: int 
+    id: Optional[int] = 0
     name: str 
     description: Optional[str] = None 
     price: Optional[int] = 0
