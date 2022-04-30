@@ -9,11 +9,11 @@ def connect():
     )
     return connection
 
-def sign_up_user_to_db(user):
+def signup_controller(user):
     try:
         connection =connect()
         cursor = connection.cursor()
-        query = 'insert into account (email_account, password_account) values (%s, %s)'
+        query = 'insert into account (email, password) values (%s, %s)'
         value = (user.email, user.password)
 
         cursor.execute(query, value)
@@ -29,11 +29,11 @@ def sign_up_user_to_db(user):
             cursor.close()
             connection.close()
 
-def sign_in_user(user):
+def signin_controller(user):
     try:
         connection =connect()
         cursor = connection.cursor()
-        query = 'select * from account where email_account = %s and password_account = %s'
+        query = 'select * from account where email = %s and password = %s'
         value = (user.email, user.password)
         cursor.execute(query, value)
         result = cursor.fetchall()
@@ -75,7 +75,7 @@ def insert_product_to_db(product):
     try:
         connection =connect()
         cursor = connection.cursor()
-        query = 'insert into product (name_product, description_product, price_product, quantity_product, image_product, id_category_product) values (%s, %s, %s, %s, %s, %s);'
+        query = 'insert into product (name, description, price, quantity, image, id_category) values (%s, %s, %s, %s, %s, %s);'
         value = (product.name, product.description, product.price, product.quantity, product.image, product.id_category)
         cursor.execute(query, value)
         connection.commit()
@@ -89,7 +89,97 @@ def insert_product_to_db(product):
         if (connection.is_connected()):
             cursor.close()
             connection.close()
-# if __name__ == "__main__":
+
+def insert_cart_to_db(cart):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'insert into cart (id_account, id_product, amount_product) values (%s, %s, %s);'
+        value = (cart.id_account, cart.id_product, cart.amount_product)
+        cursor.execute(query, value)
+        connection.commit()
+        
+        return cursor.lastrowid
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
+def update_cart_to_db(cart):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'update cart set amount_product=%s where id=%s;'
+        value = (cart.amount_product, cart.id)
+        cursor.execute(query, value)
+        connection.commit()
+
+        return cursor.lastrowid
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            
+def update_cart_by_account_product(cart):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'select * from cart where id_account=%s and id_product=%s;'
+        value = (cart.id_account, cart.id_product)
+        cursor.execute(query, value)
+        result = cursor.fetchall()
+        if len(result) != 0:
+            id_cart = result[0][0] #id 
+            cart.id = id_cart
+            update_success = update_cart_to_db(cart)
+            return update_success
+
+        else: # dont have -> insert
+            id_cart = insert_cart_to_db(cart)
+            return id_cart
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
+def get_list_cart_by_id(id_account):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'select * from cart, product where cart.id_account=%s and cart.id_product=product.id;'
+        value = [id_account]
+        cursor.execute(query, value)
+        result = cursor.fetchall()
+        
+        return result
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
+if __name__ == "__main__":
+    list_cart = get_list_cart_by_id([1])
+    print(list_cart)
 #     # sign up
 #     # is_sign_up_success = sign_up_user('mail1@gmail.com', "password")
 #     # print(is_sign_up_success)
