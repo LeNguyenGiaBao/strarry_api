@@ -30,3 +30,16 @@ class Cart(BaseModel):
     id_account: int
     id_product: int
     amount_product: int = 0
+
+class Bill_product(BaseModel):
+    id: Optional[int] = 0
+    id_product: int
+    amount_product: int =0
+
+class Bill(BaseModel):
+    id: Optional[int] = 0
+    id_account: int
+    price: int
+    discount: int
+    phone: Optional[str] = None
+    address: Optional[str] = None
