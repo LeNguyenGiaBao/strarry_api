@@ -8,6 +8,7 @@ db = mysql.connector.connect(
 )
 
 cursor = db.cursor()
+# account Table
 cursor.execute('''
   CREATE TABLE IF NOT EXISTS account (
     id INT NOT NULL AUTO_INCREMENT, 
@@ -22,7 +23,7 @@ cursor.execute('''
   );
 ''')
 
-
+# category Table
 cursor.execute('''
   CREATE TABLE IF NOT EXISTS category (
     id INT NOT NULL AUTO_INCREMENT, 
@@ -32,6 +33,7 @@ cursor.execute('''
   );
 ''')
 
+# product Table
 cursor.execute('''
   CREATE TABLE IF NOT EXISTS product (
     id INT NOT NULL AUTO_INCREMENT, 
@@ -46,6 +48,7 @@ cursor.execute('''
   );
 ''')
 
+# cart Table
 cursor.execute('''
   CREATE TABLE IF NOT EXISTS cart (
     id INT NOT NULL AUTO_INCREMENT, 
@@ -57,6 +60,30 @@ cursor.execute('''
     FOREIGN KEY (id_product) REFERENCES product(id)
   );
 ''')
+# Bill Table
+cursor.execute('''
+  CREATE TABLE IF NOT EXISTS bill (
+    id INT NOT NULL AUTO_INCREMENT, 
+    id_account INT NOT NULL,
+    price INT,
+    discount INT,
+    phone CHAR(50), 
+    address NVARCHAR(50), 
+    PRIMARY KEY (id),
+    FOREIGN KEY (id_account) REFERENCES account(id)
+  );
+''')
+# Bill_product Table
+cursor.execute('''
+  CREATE TABLE IF NOT EXISTS bill_product (
+    id INT NOT NULL , 
+    id_product INT NOT NULL,
+    amount_product INT DEFAULT 0,
+    FOREIGN KEY (id_product) REFERENCES product(id),
+    FOREIGN KEY (id) REFERENCES bill(id)
+  );
+''')
+
 
 # INSERT INTO account (email, password) VALUES ('mail1@gmail.com', 'password');
 # INSERT INTO category (name) VALUES ('Milk');
