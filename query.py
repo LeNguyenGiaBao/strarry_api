@@ -52,6 +52,26 @@ def signin_controller(user):
             cursor.close()
             connection.close()
 
+def get_email_by_id(id_account):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'select email from account where account.id=%s;'
+        value = [id_account]
+        cursor.execute(query, value)
+        result = cursor.fetchall()
+        return result[0][0]
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
+
 def get_list_product():
     try: 
         connection =connect()
@@ -129,7 +149,37 @@ def update_cart_to_db(cart):
         if (connection.is_connected()):
             cursor.close()
             connection.close()
-            
+
+def delete_cart_by_id_account(id_account):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'DELETE FROM cart WHERE id_account=%s'
+        value = [id_account]
+        cursor.execute(query, value)
+        connection.commit()
+        return True
+        # result = cursor.fetchall()
+        # if len(result) != 0:
+        #     id_cart = result[0][0] #id 
+        #     cart.id = id_cart
+        #     update_success = update_cart_to_db(cart)
+        #     return update_success
+
+        # else: # dont have -> insert
+        #     id_cart = insert_cart_to_db(cart)
+        #     return id_cart
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
+
 def update_cart_by_account_product(cart):
     try:
         connection =connect()
@@ -243,8 +293,8 @@ def insert_bill_to_db(bill):
     try:
         connection =connect()
         cursor = connection.cursor()
-        query = 'insert into bill (id, id_account, price, discount, phone, address) values (%s, %s, %s, %s, %s, %s);'
-        value = (bill.id, bill.id_account, bill.price, bill.discount, bill.phone, bill.address)
+        query = 'insert into bill (id_account, price, discount, phone, address) values ( %s, %s, %s, %s, %s);'
+        value = ( bill.id_account, bill.price, bill.discount, bill.phone, bill.address)
         cursor.execute(query, value)
         connection.commit()
         
@@ -300,8 +350,7 @@ def get_list_bill_by_id(id_account):
             connection.close()
 
 if __name__ == "__main__":
-    list_cart = get_list_cart_by_id([1])
-    print(list_cart)
+    test = delete_cart_by_id_account("1")
 #     # sign up
 #     # is_sign_up_success = sign_up_user('mail1@gmail.com', "password")
 #     # print(is_sign_up_success)

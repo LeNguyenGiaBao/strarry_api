@@ -2,8 +2,8 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.encoders import jsonable_encoder
 import uvicorn
 from model import Cart, User, Product, Bill_product, Bill
-from query import signin_controller, signup_controller, get_list_product, insert_product_to_db, update_cart_by_account_product, get_list_cart_by_id
-from query import insert_bill_product_to_db, update_bill_product_to_db, get_list_bill_product_by_id, insert_bill_to_db, update_bill_to_db, get_list_bill_by_id
+from query import signin_controller, signup_controller,get_email_by_id, get_list_product, insert_product_to_db, update_cart_by_account_product, get_list_cart_by_id
+from query import insert_bill_product_to_db,delete_cart_by_id_account, update_bill_product_to_db, get_list_bill_product_by_id, insert_bill_to_db, update_bill_to_db, get_list_bill_by_id
 import cv2 
 import asyncio
 import numpy as np 
@@ -66,6 +66,17 @@ async def signup(email: str = Form(...), password: str = Form(...)):
             'success': 'false',
             'msg': 'sign in failed'
         })
+@app.post('/account/email/')
+async def get_email(id_account: int =Form(...)):
+    email = get_email_by_id(id_account)
+    print(type(email))
+    return jsonable_encoder({
+        'code': 200,
+        'success': 'true',
+        'email': email,
+        'msg': 'get email success'
+    })
+
 
 @app.get('/products/')
 async def get_product():
@@ -139,6 +150,15 @@ async def get_cart_by_id(id_account: int = Form(...)):
 #             'success': 'false',
 #             'msg': 'add product failed'
 #         })
+@app.post('/cart/delete/')
+async def delete_cart(id_account: int =Form(...)):
+    check = delete_cart_by_id_account(id_account)
+    return jsonable_encoder({
+        'code': 200,
+        'success': 'true',
+        'cart': check,
+        'msg': 'delete cart success'
+    })
 
 @app.post('/cart/update/')
 async def update_cart(id_account: int = Form(...), id_product: int = Form(...), amount_product: int = Form(0)):
@@ -179,7 +199,7 @@ async def get_list_bill_product_by_id(id: int = Form(...)):
     })
 
 @app.post('/bill_product/insert/')
-async def insert_bill_product(id: int, id_product: int, amount_product: int = 0):
+async def insert_bill_product(id: int = Form(...), id_product: int = Form(...), amount_product: int = Form(0)):
     if id is None or id_product is None:
         return jsonable_encoder({
             'code': 200,
@@ -233,7 +253,7 @@ async def update_bill_product(id: int = Form(...), id_product: int = Form(...), 
 
 # bill
 @app.post('/bill/insert/')
-async def insert_bill(id: int, id_account: int, price: int, discount: int, phone: str = None, address: str = None ):
+async def insert_bill(id_account: int = Form(...) , price: int = Form(...), discount: int = Form(0), phone: str = Form(...), address: str = Form(...) ):
     if id is None or id_account is None:
         return jsonable_encoder({
             'code': 200,
@@ -241,7 +261,7 @@ async def insert_bill(id: int, id_account: int, price: int, discount: int, phone
             'msg': 'id  and  id_account is required'
         })
 
-    bill = Bill(id = id, id_account = id_account, price = price, discount = discount, phone = phone, address = address )
+    bill = Bill(id_account = id_account, price = price, discount = discount, phone = phone, address = address )
     id_bill = insert_bill_to_db(bill)
     if id_bill is not None:
         return jsonable_encoder({
