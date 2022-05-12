@@ -70,7 +70,25 @@ def get_email_by_id(id_account):
         if (connection.is_connected()):
             cursor.close()
             connection.close()
+            
+def get_product_by_idCategory(id_category):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'select * from product where product.id_category=%s;'
+        value = [id_category]
+        cursor.execute(query, value)
+        result = cursor.fetchall()
+        return result
 
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
 
 def get_list_product():
     try: 
@@ -350,7 +368,8 @@ def get_list_bill_by_id(id_account):
             connection.close()
 
 if __name__ == "__main__":
-    test = delete_cart_by_id_account("1")
+    test = get_product_by_idCategory("1")
+    print(test)
 #     # sign up
 #     # is_sign_up_success = sign_up_user('mail1@gmail.com', "password")
 #     # print(is_sign_up_success)
