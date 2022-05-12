@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.encoders import jsonable_encoder
 import uvicorn
 from model import Cart, User, Product, Bill_product, Bill
-from query import signin_controller, signup_controller,get_email_by_id, get_list_product, insert_product_to_db, update_cart_by_account_product, get_list_cart_by_id
+from query import signin_controller, signup_controller,get_email_by_id, get_list_product, insert_product_to_db, update_cart_by_account_product, get_list_cart_by_id, get_product_by_idCategory
 from query import insert_bill_product_to_db,delete_cart_by_id_account, update_bill_product_to_db, get_list_bill_product_by_id, insert_bill_to_db, update_bill_to_db, get_list_bill_by_id
 import cv2 
 import asyncio
@@ -81,6 +81,15 @@ async def get_email(id_account: int =Form(...)):
 @app.get('/products/')
 async def get_product():
     products = get_list_product()
+    return jsonable_encoder({
+        'code': 200,
+        'success': 'true',
+        'products': products,
+        'msg': 'load product success'
+    })
+@app.post('/products/get/')
+async def get_product_by_id_Category(id_category: int =Form(...)):
+    products = get_product_by_idCategory(id_category)
     return jsonable_encoder({
         'code': 200,
         'success': 'true',
