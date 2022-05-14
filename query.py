@@ -51,6 +51,48 @@ def signin_controller(user):
         if (connection.is_connected()):
             cursor.close()
             connection.close()
+def update_user_by_id(name, phone, address, id_account):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'update account set name=%s, phone=%s,address=%s where id=%s;'
+        value = (name,phone,address,id_account)
+        cursor.execute(query, value)
+        connection.commit()
+
+        return cursor.lastrowid
+
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+
+def get_user_by_id(id_account):
+    try:
+        connection =connect()
+        cursor = connection.cursor()
+        query = 'select * from account where id = %s'
+        value = [id_account]
+        cursor.execute(query, value)
+        result = cursor.fetchall()
+        if len(result) != 0:
+            return result[0]
+
+        else:
+            return None 
+    
+    except connector.Error as error:
+        print(error)
+        return None 
+
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
 
 def get_email_by_id(id_account):
     try:
@@ -368,7 +410,7 @@ def get_list_bill_by_id(id_account):
             connection.close()
 
 if __name__ == "__main__":
-    test = get_product_by_idCategory("1")
+    test = update_user_by_id("kien","035","binh dinh","1")
     print(test)
 #     # sign up
 #     # is_sign_up_success = sign_up_user('mail1@gmail.com', "password")

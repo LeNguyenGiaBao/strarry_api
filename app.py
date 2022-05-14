@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.encoders import jsonable_encoder
 import uvicorn
 from model import Cart, User, Product, Bill_product, Bill
-from query import signin_controller, signup_controller,get_email_by_id, get_list_product, insert_product_to_db, update_cart_by_account_product, get_list_cart_by_id, get_product_by_idCategory
+from query import update_user_by_id,get_user_by_id,signin_controller, signup_controller,get_email_by_id, get_list_product, insert_product_to_db, update_cart_by_account_product, get_list_cart_by_id, get_product_by_idCategory
 from query import insert_bill_product_to_db,delete_cart_by_id_account, update_bill_product_to_db, get_list_bill_product_by_id, insert_bill_to_db, update_bill_to_db, get_list_bill_by_id
 import cv2 
 import asyncio
@@ -66,6 +66,7 @@ async def signup(email: str = Form(...), password: str = Form(...)):
             'success': 'false',
             'msg': 'sign in failed'
         })
+
 @app.post('/account/email/')
 async def get_email(id_account: int =Form(...)):
     email = get_email_by_id(id_account)
@@ -75,6 +76,30 @@ async def get_email(id_account: int =Form(...)):
         'success': 'true',
         'email': email,
         'msg': 'get email success'
+    })
+
+@app.post('/account/update/')
+async def update_account_byid(name: str=Form(...), phone: str=Form(...), address: str=Form(...),id_account: int=Form(...) ):
+    index = update_user_by_id(name, phone, address, id_account)
+    status=False
+    if index >=0:
+        status=True
+    return jsonable_encoder({
+        'code': 200,
+        'success': 'true',
+        'status': status,
+        'msg': 'update account success'
+    })
+
+@app.post('/account/id/')
+async def get_account_byid(id_account: int =Form(...)):
+    account = get_user_by_id(id_account)
+    print(type(account))
+    return jsonable_encoder({
+        'code': 200,
+        'success': 'true',
+        'account': account,
+        'msg': 'get account success'
     })
 
 
