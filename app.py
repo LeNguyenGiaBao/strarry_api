@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 import uvicorn
 from model import Cart, User, Product, Bill_product, Bill
 from query import update_user_by_id,get_user_by_id,signin_controller, signup_controller,get_email_by_id, get_list_product, insert_product_to_db, update_cart_by_account_product, get_list_cart_by_id, get_product_by_idCategory
-from query import insert_bill_product_to_db,delete_cart_by_id_account, update_bill_product_to_db, get_list_bill_product_by_id, insert_bill_to_db, update_bill_to_db, get_list_bill_by_id
+from query import insert_bill_product_to_db,delete_cart_by_id_account, update_bill_product_to_db, get_list_bill_product_by_id_from_db, insert_bill_to_db, update_bill_to_db, get_list_bill_by_id_from_db
 import cv2 
 import asyncio
 import numpy as np 
@@ -94,7 +94,7 @@ async def update_account_byid(name: str=Form(...), phone: str=Form(...), address
 @app.post('/account/id/')
 async def get_account_byid(id_account: int =Form(...)):
     account = get_user_by_id(id_account)
-    print(type(account))
+    print((account))
     return jsonable_encoder({
         'code': 200,
         'success': 'true',
@@ -224,7 +224,7 @@ async def update_cart(id_account: int = Form(...), id_product: int = Form(...), 
 # bill product
 @app.post('/bill_product/')
 async def get_list_bill_product_by_id(id: int = Form(...)):
-    bill_product = get_list_bill_product_by_id(id)
+    bill_product = get_list_bill_product_by_id_from_db(id)
     return jsonable_encoder({
         'code': 200,
         'success': 'true',
@@ -341,7 +341,8 @@ async def update_bill(id: int = Form(...), id_account: int = Form(...), price: i
 
 @app.post('/bill/')
 async def get_list_bill_by_id(id_account: int = Form(...)):
-    bill = get_list_bill_by_id(id_account)
+    bill = get_list_bill_by_id_from_db(id_account)
+    print(bill)
     return jsonable_encoder({
         'code': 200,
         'success': 'true',

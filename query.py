@@ -328,12 +328,12 @@ def update_bill_product_to_db(bill_product):
             cursor.close()
             connection.close()
 
-def get_list_bill_product_by_id(id):
+def get_list_bill_product_by_id_from_db(id_bill):
     try:
         connection =connect()
         cursor = connection.cursor()
-        query = 'select * from bill_product, bill where bill_product.id=%s and bill_product.id=bill.id;'
-        value = [id_account]
+        query = 'select * from product, bill_product, bill where bill.id=%s and bill_product.id=bill.id and product.id=bill_product.id_product;'
+        value = [id_bill]
         cursor.execute(query, value)
         result = cursor.fetchall()
         
@@ -389,11 +389,11 @@ def update_bill_to_db(bill):
             cursor.close()
             connection.close()
 
-def get_list_bill_by_id(id_account):
+def get_list_bill_by_id_from_db(id_account):
     try:
         connection =connect()
         cursor = connection.cursor()
-        query = 'select * from bill, account where bill.id_account=%s and bill.id_account=account.id_account;'
+        query = 'select * from bill, account where bill.id_account=%s and bill.id_account=account.id;'
         value = [id_account]
         cursor.execute(query, value)
         result = cursor.fetchall()
